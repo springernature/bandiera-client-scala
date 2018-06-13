@@ -21,6 +21,7 @@ useGpg := false
 
 // publish to sonatype
 pomIncludeRepository := { _ => false }
+updateOptions := updateOptions.value.withGigahorse(false)
 licenses := Seq("MIT" -> url("https://github.com/springernature/bandiera-client-scala/blob/master/LICENSE"))
 homepage := Some(url("https://github.com/springernature/bandiera-client-scala"))
 scmInfo := Some(
