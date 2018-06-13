@@ -26,9 +26,9 @@ case class FeatureNotFound() extends BandieraApiException("This group does not e
 /* client code */
 
 class BandieraClient(baseApiUri: String = "http://127.0.0.1:5000/api")
-                    (implicit val ec: ExecutionContext,
-                     implicit val backend: SttpBackend[Future, Nothing] = AsyncHttpClientFutureBackend(
-                       options = SttpBackendOptions.connectionTimeout(5.seconds))
+                    (implicit val backend: SttpBackend[Future, Nothing] = AsyncHttpClientFutureBackend(
+                       options = SttpBackendOptions.connectionTimeout(5.seconds)),
+                     implicit val ec: ExecutionContext
                     ) {
 
   def getFeaturesForGroup(group: String,

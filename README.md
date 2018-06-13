@@ -11,9 +11,14 @@ This client currently only implements the read methods of the [v2 Bandiera API][
 Installation
 ------------
 
-```sh
+supported scala versions: 2.11.x and 2.12.x
 
+in build.sbt add the dependency:
 ```
+"com.springernature" %% "bandiera-client-scala" % "0.1.1"
+```
+
+
 
 
 Usage
@@ -22,12 +27,21 @@ Usage
 Create an instance of the bandiera client:
 
 ```scala
+import com.springernature.bandieraclientscala._
 
+val client = new BandieraClient()
 ```
 
 Options
 -------
 
+you can initialize BandieraClient with:
+- baseApiUri: defaults to `http://127.0.0.1:5000/api`
+- an `sttp` backend that returns a Future
+  by default we use `AsyncHttpClientFutureBackend`.
+  read more here: https://sttp.readthedocs.io/en/latest/backends/summary.html?highlight=scala.concurrent.Future
+- ec ExecutionContext
+  
 
 Contributing
 ------------

@@ -1,29 +1,28 @@
-lazy val root = (project in file(".")).
-  settings(
-    useGpg := true,
-    inThisBuild(List(
-      organization := "com.springernature",
-      scalaVersion := "2.12.6",
-      version      := "0.1.0"
-    )),
-    name := "bandiera-client-scala",
-    libraryDependencies ++= List(
-      "com.softwaremill.sttp" %% "core" % "1.1.14",
-      "com.softwaremill.sttp" %% "async-http-client-backend-future" % "1.1.14",
-      "com.typesafe.play" %% "play-json" % "2.6.8",
-      "com.lihaoyi" %% "utest" % "0.6.3" % "test"
-    ),
-    testFrameworks += new TestFramework("utest.runner.Framework"),
-    parallelExecution in Test := false
-  )
+
+name := "bandiera-client-scala"
+version      := "0.1.1"
+organization := "com.springernature"
+scalaVersion := "2.12.6"
+crossScalaVersions := List(scalaVersion.value, "2.11.12")
+libraryDependencies ++= List(
+  "com.softwaremill.sttp" %% "core" % "1.1.14",
+  "com.softwaremill.sttp" %% "async-http-client-backend-future" % "1.1.14",
+  "com.typesafe.play" %% "play-json" % "2.6.8",
+  "com.lihaoyi" %% "utest" % "0.6.3" % "test"
+)
+testFrameworks += new TestFramework("utest.runner.Framework")
+parallelExecution in Test := false
+
+
+// gpg signing
+// - using https://www.scala-sbt.org/sbt-pgp/usage.html
+// - use sbt-pgp built in bouncy castle
+useGpg := false
 
 // publish to sonatype
-
-useGpg := true
 pomIncludeRepository := { _ => false }
 licenses := Seq("MIT" -> url("https://github.com/springernature/bandiera-client-scala/blob/master/LICENSE"))
 homepage := Some(url("https://github.com/springernature/bandiera-client-scala"))
-
 scmInfo := Some(
   ScmInfo(
     url("https://github.com/springernature/bandiera-client-scala"),
@@ -32,7 +31,6 @@ scmInfo := Some(
 )
 
 publishMavenStyle := true
-
 
 developers := List(
   Developer(
