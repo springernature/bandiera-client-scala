@@ -18,7 +18,7 @@ object BandieraClientTests extends TestSuite {
         .whenRequestMatches(_.uri.toString().endsWith("/api/v2/groups/g/features"))
         .thenRespond(Response(Right(mockedResp), 200, "", Nil, Nil))
 
-      new BandieraClient().getFeaturesForGroup("g").map(featureFlags => {
+      new BandieraClient(backend=testingBackend).getFeaturesForGroup("g").map(featureFlags => {
         assert(featureFlags.length == 2)
         assert(featureFlags.contains(FeatureFlag("1", false)))
         assert(featureFlags.contains(FeatureFlag("2", true)))
@@ -30,7 +30,7 @@ object BandieraClientTests extends TestSuite {
         .whenRequestMatches(_.uri.toString().endsWith("/api/v2/groups/nope/features"))
         .thenRespond(Response(Left(mockedResp), 404, "", Nil, Nil))
 
-      new BandieraClient().getFeaturesForGroup("nope").map(response => {
+      new BandieraClient(backend=testingBackend).getFeaturesForGroup("nope").map(response => {
         throw new Exception("failed")
       }).recover {
         case e: GroupNotFound => {/* success */}
@@ -42,7 +42,7 @@ object BandieraClientTests extends TestSuite {
         .whenRequestMatches(_.uri.toString().endsWith("/api/v2/groups/g/features/gg"))
         .thenRespond(Response(Right(mockedResp), 200, "", Nil, Nil))
 
-      new BandieraClient().getFeature(group = "g", feature = "gg").map(flag => {
+      new BandieraClient(backend=testingBackend).getFeature(group = "g", feature = "gg").map(flag => {
         assert(flag.name == "gg")
         assert(flag.active == false)
       })
@@ -53,7 +53,7 @@ object BandieraClientTests extends TestSuite {
         .whenRequestMatches(_.uri.toString().endsWith("/api/v2/groups/g/features/nope"))
         .thenRespond(Response(Left(mockedResp), 404, "", Nil, Nil))
 
-      new BandieraClient().getFeature(group = "g", feature = "nope").map(response => {
+      new BandieraClient(backend=testingBackend).getFeature(group = "g", feature = "nope").map(response => {
         throw new Exception("failed")
       }).recover {
         case e: FeatureNotFound => {/* success */}
@@ -65,7 +65,7 @@ object BandieraClientTests extends TestSuite {
         .whenRequestMatches(_.uri.toString().endsWith("/api/v2/all"))
         .thenRespond(Response(Right(mockedResp), 200, "", Nil, Nil))
 
-      new BandieraClient().getAll().map(response => {
+      new BandieraClient(backend=testingBackend).getAll().map(response => {
         assert(response.isEmpty)
       })
     }
@@ -76,7 +76,7 @@ object BandieraClientTests extends TestSuite {
         .whenRequestMatches(_.uri.toString().endsWith("/api/v2/all"))
         .thenRespond(Response(Right(mockedResp), 200, "", Nil, Nil))
 
-      new BandieraClient().getAll().map(response => {
+      new BandieraClient(backend=testingBackend).getAll().map(response => {
         assert(response.size == 2)
         assert(response("g").size == 2)
         assert(response("g").contains(FeatureFlag("foo", false)))

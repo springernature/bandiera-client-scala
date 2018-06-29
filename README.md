@@ -15,7 +15,7 @@ supported scala versions: 2.11.x and 2.12.x
 
 in build.sbt add the dependency:
 ```
-"com.springernature" %% "bandiera-client-scala" % "0.1.1"
+"com.springernature" %% "bandiera-client-scala" % "0.1.2"
 ```
 
 
@@ -37,10 +37,14 @@ Options
 
 you can initialize BandieraClient with:
 - baseApiUri: defaults to `http://127.0.0.1:5000/api`
-- an `sttp` backend that returns a Future
-  by default we use `AsyncHttpClientFutureBackend`.
+- backend: an `sttp` backend that returns a Future.  
+  by default we use `AsyncHttpClientFutureBackend`.  
   read more here: https://sttp.readthedocs.io/en/latest/backends/summary.html?highlight=scala.concurrent.Future
-- ec ExecutionContext
+
+notice: BandieraClient expects to have an ExecutionContext implicitly available in scope.
+- either `import scala.concurrent.ExecutionContext.Implicits.global`
+- or provide an ExecutionContext in second constructor params group:
+  ``` new BandieraClient(...)(ec = yourExecutor)```
   
 
 Contributing

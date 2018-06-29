@@ -1,6 +1,6 @@
 
 name := "bandiera-client-scala"
-version      := "0.1.1"
+version      := "0.1.2"
 organization := "com.springernature"
 scalaVersion := "2.12.6"
 crossScalaVersions := List(scalaVersion.value, "2.11.12")
@@ -21,7 +21,7 @@ useGpg := false
 
 // publish to sonatype
 pomIncludeRepository := { _ => false }
-updateOptions := updateOptions.value.withGigahorse(false)
+//updateOptions := updateOptions.value.withGigahorse(false)
 licenses := Seq("MIT" -> url("https://github.com/springernature/bandiera-client-scala/blob/master/LICENSE"))
 homepage := Some(url("https://github.com/springernature/bandiera-client-scala"))
 scmInfo := Some(
