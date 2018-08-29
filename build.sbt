@@ -10,8 +10,7 @@ libraryDependencies ++= List(
   "com.typesafe.play" %% "play-json" % "2.6.8",
   "com.lihaoyi" %% "utest" % "0.6.3" % "test"
 )
-testFrameworks += new TestFramework("utest.runner.Framework")
-parallelExecution in Test := false
+testFrameworks := Seq(new TestFramework("com.springernature.bandieraclientscala.tests.CustomFramework"))
 
 
 // gpg signing
@@ -20,6 +19,7 @@ parallelExecution in Test := false
 useGpg := false
 
 // publish to sonatype
+// `+publishSigned` to cross publish
 pomIncludeRepository := { _ => false }
 //updateOptions := updateOptions.value.withGigahorse(false)
 licenses := Seq("MIT" -> url("https://github.com/springernature/bandiera-client-scala/blob/master/LICENSE"))

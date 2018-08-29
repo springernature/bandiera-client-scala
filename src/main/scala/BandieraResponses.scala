@@ -17,8 +17,6 @@ object FeaturesForGroupResponse {
     Reads[FeaturesForGroupResponse](json => {
       val maybeWarning = (json \ "warning")
       if (maybeWarning.isDefined) {
-        println("found warning, will do ")
-        println(maybeWarning.as[String])
         JsError(maybeWarning.as[String])
       }
       else {
