@@ -15,7 +15,7 @@ supported scala versions: 2.11.x and 2.12.x
 
 in build.sbt add the dependency:
 ```
-"com.springernature" %% "bandiera-client-scala" % "0.1.2"
+"com.springernature" %% "bandiera-client-scala" % "0.2.0"
 ```
 
 

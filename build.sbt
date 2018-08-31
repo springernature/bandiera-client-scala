@@ -1,6 +1,6 @@
 
 name := "bandiera-client-scala"
-version      := "0.1.2"
+version      := "0.2.0"
 organization := "com.springernature"
 scalaVersion := "2.12.6"
 crossScalaVersions := List(scalaVersion.value, "2.11.12")
