@@ -2,7 +2,8 @@ package com.springernature.bandieraclientscala
 
 import com.softwaremill.sttp._
 import com.softwaremill.sttp.asynchttpclient.future.AsyncHttpClientFutureBackend
-import play.api.libs.json._
+import upickle.default.{ReadWriter, macroRW}
+
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -12,7 +13,7 @@ import scala.concurrent.{ExecutionContext, Future}
 case class FeatureFlag(name: String, active: Boolean)
 
 object FeatureFlag {
-  implicit val fmt: Format[FeatureFlag] = Json.format[FeatureFlag]
+  implicit val rw: ReadWriter[FeaturesForGroupResponse] = macroRW
 }
 
 /* exception case classes */
@@ -31,41 +32,74 @@ class BandieraClient(baseApiUri: String = "http://127.0.0.1:5000/api",
                      implicit val backend: SttpBackend[Future, Nothing] = AsyncHttpClientFutureBackend())
                     (implicit val ec: ExecutionContext) {
 
-  def getFeaturesForGroup(group: String,
-                          userGroup: Option[String] = None,
-                          userId: Option[String] = None): Future[Seq[FeatureFlag]] = {
-    val path = s"$baseApiUri/v2/groups/$group/features"
-    sttp
-      .get(uri"$path")
-      .readTimeout(5.seconds)
-      .response(asString.map(Json.parse).map(_.as[FeaturesForGroupResponse].flags))
-      .send()
-      .flatMap(transformEither)
-  }
+  import com.springernature.bandieraclientscala.AllFeaturesResponse._
+  import com.springernature.bandieraclientscala.FeaturesForGroupResponse._
+  import com.springernature.bandieraclientscala.SingleFeatureForGroupResponse._
+  import upickle.default._
 
   def getFeature(group: String,
                  feature: String,
                  userGroup: Option[String] = None,
                  userId: Option[String] = None): Future[FeatureFlag] = {
     val path = s"$baseApiUri/v2/groups/$group/features/$feature"
+    val params = Seq(
+      userGroup.map(ug => ("user_group", ug)),
+      userId.map(uid => ("user_id", uid))
+    ).flatten
     sttp
-      .get(uri"$path")
+      .get(uri"$path".params(params: _*))
       .readTimeout(5.seconds)
-      .response(asString.map(Json.parse).map(jsVal => {
-        val flagVal = jsVal.as[SingleFeatureForGroupResponse].flagValue
-        FeatureFlag(feature, flagVal)
-      }))
+      .response(
+        asString
+          .map(s => read[SingleFeatureForGroupResponse](s))
+          .map(featResp => FeatureFlag(feature, featResp.response))
+      )
       .send()
       .flatMap(transformEither)
   }
 
+  def getFeaturesForGroup(group: String,
+                          userGroup: Option[String] = None,
+                          userId: Option[String] = None): Future[Seq[FeatureFlag]] = {
+    val path = s"$baseApiUri/v2/groups/$group/features"
+    val params = Seq(
+      userGroup.map(ug => ("user_group", ug)),
+      userId.map(uid => ("user_id", uid))
+    ).flatten
+    sttp
+      .get(uri"$path".params(params: _*))
+      .readTimeout(5.seconds)
+      .response(
+        asString
+          .map(s => read[FeaturesForGroupResponse](s))
+          .map(resp => resp.response.toSeq.map{
+            case (featName, bool) => FeatureFlag(featName, bool)
+          })
+      )
+      .send()
+      .flatMap(transformEither)
+  }
+
+
   def getAll(userGroup: Option[String] = None,
              userId: Option[String] = None): Future[Map[String, Seq[FeatureFlag]]] = {
     val path = s"$baseApiUri/v2/all"
+    val params = Seq(
+      userGroup.map(ug => ("user_group", ug)),
+      userId.map(uid => ("user_id", uid))
+    ).flatten
     sttp
-      .get(uri"$path")
+      .get(uri"$path".params(params: _*))
       .readTimeout(5.seconds)
-      .response(asString.map(Json.parse).map(_.as[AllFeaturesResponse]).map(_.groupsToFlagsMap))
+      .response(
+        asString
+          .map(s => read[AllFeaturesResponse](s))
+          .map(resp => {
+            resp.response.map {
+              case (group, groupFeatsMap) =>
+                (group, groupFeatsMap.toSeq.map(tup => FeatureFlag(tup._1, tup._2)))
+            }
+          }))
       .send()
       .flatMap(transformEither)
   }
@@ -87,6 +121,6 @@ class BandieraClient(baseApiUri: String = "http://127.0.0.1:5000/api",
   // only used for multiple warning for now
   // TODO: extract and prettify all different warnings
   private def extractWarning(s: String): String = {
-    (Json.parse(s) \ "warning").get.toString
+    ujson.read(s)("warning").str
   }
 }

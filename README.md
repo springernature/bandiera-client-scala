@@ -11,7 +11,7 @@ This client currently only implements the read methods of the [v2 Bandiera API][
 Installation
 ------------
 
-supported scala versions: 2.11.x and 2.12.x
+supported scala versions: 2.11.x, 2.12.x, 2.13.x
 
 in build.sbt add the dependency:
 ```
