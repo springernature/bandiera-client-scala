@@ -27,17 +27,17 @@ testFrameworks := Seq(new TestFramework("com.springernature.bandieraclientscala.
 
 
 // gpg signing credentials
-// - using https://github.com/sbt/sbt-pgp/
-// - uses gpg-agent under the hood
-credentials += Credentials(
-  "GnuPG Key ID",
-  "gpg",
-  "3427CA7B4A759D2AFE2E1025E8D4EACC424C5928", // key identifier
-  "ignored" // this field is ignored; passwords are supplied by pinentry
-)
+// - using plugin: https://github.com/sbt/sbt-pgp/
+//   which uses gpg-agent under the hood
+// - `gpg -k` and check that you have the key used for signing:
+//      pub   rsa2048 2018-05-25 [SCEA]
+//            3427CA7B4A759D2AFE2E1025E8D4EACC424C5928
+//      uid           [ultimate] sonatype_publish_key <samuel.zilverberg@springernature.com>
+usePgpKeyHex("3427CA7B4A759D2AFE2E1025E8D4EACC424C5928")
 
 
 // published to sonatype
+// via plugin: https://github.com/xerial/sbt-sonatype
 // `+publishSigned` to cross publish
 // credentials to sonatype are in /Users/user/.sbt/1.0/sonatype.sbt
 // and look like
