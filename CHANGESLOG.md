@@ -1,6 +1,21 @@
 Changes log
 ===========
 
+## 0.3.1 2020-05-07
+
+- dependency updates: improve ranges to better avoid binary incompatibilities
+- update sbt plugin to 1.3.10
+- update build plugins: sbt-sonatype and sbt-pgp
+
+
+## 0.3.0 2019-09-24
+
+- scala 2.13 support
+- json: replace play-json with com.lihaoyi.upickle
+- update sbt plugin to 1.2.8
+- update build plugins: sbt-sonatype and sbt-pgp
+
+
 ## 0.2.0 2018-08-31
 
 - add support for missing bandiera errors:

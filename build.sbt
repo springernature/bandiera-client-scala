@@ -1,6 +1,6 @@
 
 name := "bandiera-client-scala"
-version := "0.3.0"
+version := "0.3.1"
 organization := "com.springernature"
 description :=
   """
@@ -18,10 +18,10 @@ scalaVersion := "2.12.10"
 crossScalaVersions := List("2.11.12", "2.12.10", "2.13.1")
 
 libraryDependencies ++= List(
-  "com.softwaremill.sttp" %% "core" % "1.6.0+",
-  "com.softwaremill.sttp" %% "async-http-client-backend-future" % "1.6.0+",
-  "com.lihaoyi" %% "upickle" % "0+",
-  "com.lihaoyi" %% "utest" % "0.6+" % Test
+  "com.softwaremill.sttp" %% "core" % "[1.6.0, 2.0)",
+  "com.softwaremill.sttp" %% "async-http-client-backend-future" % "[1.6.0, 2.0)",
+  "com.lihaoyi" %% "upickle" % "[0.6, 1.0)",
+  "com.lihaoyi" %% "utest" % "[0.6, 1.0)" % Test
 )
 testFrameworks := Seq(new TestFramework("com.springernature.bandieraclientscala.tests.CustomFramework"))
 
